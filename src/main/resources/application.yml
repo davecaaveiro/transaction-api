@@ -1,0 +1,16 @@
+spring:
+  application.name: transaction
+  r2dbc:
+    url: r2dbc:postgresql://host.docker.internal:5433/postgres
+    username: postgres
+    password: postgres
+    initialization-mode: always
+    pool:
+      enabled: true
+      initial-size: 50
+      max-size: 100
+      max-idle-time: 30m
+      validation-query: SELECT 1
+
+log:
+  level: INFO

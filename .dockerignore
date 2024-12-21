@@ -1,0 +1,28 @@
+ Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+.docker
+.dockerignore
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Virtual environment
+.env
+.venv/
+venv/
+
+.idea
+build
+gradle
+images
+qa

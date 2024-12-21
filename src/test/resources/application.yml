@@ -1,0 +1,8 @@
+spring:
+  profiles.active: test
+  r2dbc:
+    url: r2dbc:tc:postgresql:///test?TC_IMAGE_TAG=latest
+
+log:
+  level: INFO
+  level.org.springframework.data.r2dbc: Debug
