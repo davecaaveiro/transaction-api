@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = WebExchangeBindException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Mono<ResponseEntity<ErrorResponse>> handleWebExchangeBindException(WebExchangeBindException ex, WebRequest request) {
+    public Mono<ResponseEntity<ErrorResponse>> handleWebExchangeBindException(WebExchangeBindException ex) {
 
         logger.error("Bad request", ex.getCause());
 
@@ -38,7 +38,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Mono<ResponseEntity<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+    public Mono<ResponseEntity<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+
+        logger.error("Bad request", ex.getCause());
+
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("Bad request")
+                        .timestamp(System.currentTimeMillis())
+                        .build()));
+    }
+
+    @ExceptionHandler(value = ServerWebInputException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Mono<ResponseEntity<ErrorResponse>> handleServerWebInputException(ServerWebInputException ex) {
 
         logger.error("Bad request", ex.getCause());
 
@@ -52,7 +66,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = NoSuchElementException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public Mono<ResponseEntity<ErrorResponse>> handleNoSuchElementException(NoSuchElementException ex, WebRequest request) {
+    public Mono<ResponseEntity<ErrorResponse>> handleNoSuchElementException(NoSuchElementException ex) {
 
         logger.error("Resource not found", ex.getCause());
 
@@ -66,7 +80,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public Mono<ResponseEntity<ErrorResponse>> handleException(Exception ex, WebRequest request) {
+    public Mono<ResponseEntity<ErrorResponse>> handleException(Exception ex) {
 
         logger.error("Internal server error", ex.getCause());
 

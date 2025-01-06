@@ -22,6 +22,7 @@ public class TransactionMapper {
                 .accountId(transaction.getAccountId())
                 .operationTypeId(transaction.getOperationTypeId())
                 .amount(transaction.getAmount())
+                .balance(transaction.getBalance())
                 .build();
     }
 

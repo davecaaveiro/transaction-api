@@ -6,6 +6,7 @@ import io.pismo.transaction.transaction.model.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +17,8 @@ public class TransactionMapperTest {
     static final Long ID = 1L;
     static final Long ACCOUNT_ID = 1L;
     static final Integer OPERATION_TYPE_ID = 1;
-    static final Float AMOUNT = 100.50f;
+    static final BigDecimal AMOUNT = BigDecimal.valueOf(100.50);
+    static final BigDecimal BALANCE = BigDecimal.valueOf(100.50);
     static final LocalDateTime LOCAL_DATE_TIME_NOW = LocalDateTime.now();
 
     @Test
@@ -44,6 +46,7 @@ public class TransactionMapperTest {
                 .accountId(ACCOUNT_ID)
                 .operationTypeId(OPERATION_TYPE_ID)
                 .amount(AMOUNT)
+                .balance(BALANCE)
                 .eventDate(LOCAL_DATE_TIME_NOW)
                 .build();
         TransactionResponse expectedTransactionResponse = TransactionResponse.builder()
@@ -51,6 +54,7 @@ public class TransactionMapperTest {
                 .accountId(ACCOUNT_ID)
                 .operationTypeId(OPERATION_TYPE_ID)
                 .amount(AMOUNT)
+                .balance(BALANCE)
                 .build();
 
         assertEquals(expectedTransactionResponse, TransactionMapper.toTransactionResponse(transaction));

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS transaction (
     account_id BIGINT NOT NULL REFERENCES account (id),
     operation_type_id BIGINT NOT NULL REFERENCES operation_type (id),
     amount  NUMERIC(10, 2) NOT NULL,
+    balance  NUMERIC(10, 2) NOT NULL,
     event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     version BIGINT NOT NULL
 );

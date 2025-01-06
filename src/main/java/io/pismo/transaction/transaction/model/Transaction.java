@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -24,7 +25,9 @@ public class Transaction {
 
     private Integer operationTypeId;
 
-    private Float amount;
+    private BigDecimal amount;
+
+    private BigDecimal balance;
 
     @CreatedDate
     private LocalDateTime eventDate;

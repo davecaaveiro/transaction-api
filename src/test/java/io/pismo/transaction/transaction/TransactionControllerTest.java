@@ -12,6 +12,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 
@@ -22,7 +24,8 @@ class TransactionControllerTest {
     static final Long ID = 1L;
     static final Long ACCOUNT_ID = 1L;
     static final Integer OPERATION_TYPE_ID = 1;
-    static final Float AMOUNT = 100.50f;
+    static final BigDecimal AMOUNT = BigDecimal.valueOf(100.50);
+    static final BigDecimal BALANCE = BigDecimal.valueOf(100.50);
 
     @Autowired
     WebTestClient webTestClient;
@@ -44,6 +47,7 @@ class TransactionControllerTest {
                 .accountId(ACCOUNT_ID)
                 .operationTypeId(OPERATION_TYPE_ID)
                 .amount(AMOUNT)
+                .balance(BALANCE)
                 .build());
 
         doAnswer(invocation -> transactionResponseMono).when(transactionService).createTransaction(transactionRequest);
@@ -63,7 +67,9 @@ class TransactionControllerTest {
                 .jsonPath("$.operationTypeId")
                 .isEqualTo(OPERATION_TYPE_ID)
                 .jsonPath("$.amount")
-                .isEqualTo(AMOUNT);
+                .isEqualTo(AMOUNT)
+                .jsonPath("$.balance")
+                .isEqualTo(BALANCE);
     }
 
     @Test

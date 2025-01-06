@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest
 public class TransactionServiceTest {
@@ -22,7 +24,8 @@ public class TransactionServiceTest {
     static final Long ID = 1L;
     static final Long ACCOUNT_ID = 1L;
     static final Integer OPERATION_TYPE_ID = 1;
-    static final Float AMOUNT = 100.50f;
+    static final BigDecimal AMOUNT = BigDecimal.valueOf(100.50);
+    static final BigDecimal BALANCE = BigDecimal.valueOf(100.50);
 
     @Autowired
     TransactionService transactionService;
@@ -48,6 +51,7 @@ public class TransactionServiceTest {
                 .accountId(ACCOUNT_ID)
                 .operationTypeId(OPERATION_TYPE_ID)
                 .amount(AMOUNT)
+                .balance(BALANCE)
                 .build();
 
         doAnswer(invocation -> Mono.just(expectedTransactionResponse)).when(transactionRepository).save(transaction);
@@ -67,9 +71,11 @@ public class TransactionServiceTest {
                 .amount(AMOUNT)
                 .build();
 
-        doThrow(RuntimeException.class).when(transactionRepository).save(any());
+        doReturn(Mono.error(new RuntimeException("Exception Message"))).when(transactionRepository).save(any());
 
-        assertThrows(RuntimeException.class, () -> transactionService.createTransaction(transactionRequest));
+        StepVerifier.create(transactionService.createTransaction(transactionRequest))
+                .expectError(RuntimeException.class)
+                .verify();
     }
 
 }
